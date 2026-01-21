@@ -19,3 +19,14 @@ today
 - set mobile friendly display window
 - import font
 - write opening message
+
+feature: hand-write the letters
+parse the font into points: done
+generate the message - Sources - src/components/helpers/HandwrittenText.tsx
+
+feature: balloons swipe across the screen
+
+credit:
+dammafra.dev christmas card
+
+start the next project with Typescript.
