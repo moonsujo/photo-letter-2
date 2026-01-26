@@ -6,6 +6,7 @@ import { FontLoader } from 'three/examples/jsm/loaders/FontLoader'
 
 const FONT_URL = '/fonts/caveat.json' // Ensure this path is correct
 const SAMPLE_RESOLUTION = 1
+const PARSE_TIME_LIMIT_MS = 12
 
 function useCaveatFont(text, options) {
   const [fontData, setFontData] = useState(null)
@@ -62,6 +63,27 @@ function useCaveatFont(text, options) {
     }
 
     // generate
+    const generate = async () => {
+      const lines = []
+      let currentLineStrokes = []
+      let currentLineX = 0
+
+      const paragraphs = text.split('\n')
+      let loopStartTime = performance.now()
+
+      for (const paragraph of paragraphs) {
+        const words = paragraph.split(' ')
+
+        for (const word of words) {
+          if (performance.now() - loopStartTime > PARSE_TIME_LIMIT_MS) { // what if the time limit was longer?
+            await new Promise(resolve => setTimeout(resolve, 0)) // parse, yield, repeat
+            // asynchronous: run in sequence
+            // guarantee 'generate' works for a short amount of time so the rest of the program can continue
+            if (isCancelled) return
+            loopStartTime = performance.now()
+        }
+      }
+    }
   })
 }
 function HandwrittenText({ text }) {
