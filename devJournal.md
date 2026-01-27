@@ -30,3 +30,24 @@ credit:
 dammafra.dev christmas card
 
 start the next project with Typescript.
+
+012626
+i don't completely understand everything i'm taking from dammafra's project.
+if i simplified the feature, i would never have read someone else's code.
+same goes for writing a video puzzle instead of photo puzzle.
+i wish i was smart enough to learn all of these things at once.
+
+parts of dammafra's card
+chunking
+canceling, sequence
+writing font as points
+camera control
+code organization
+typescript
+
+i enjoyed reading dammafra's code
+i don't enjoy copying code and debugging it. i don't understand what went wrong. i don't like relying on AI to debug.
+i was hooked by the handwriting feature. i didn't think about how it was going to be incorporated into my idea.
+
+learning
+three.js journey certificate

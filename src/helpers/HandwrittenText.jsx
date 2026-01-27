@@ -1,7 +1,9 @@
 import { useEffect, useState, useRef, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
+import { Vector3 } from 'three'
+import { Line } from '@react-three/drei'
 
-const FONT_URL = 'caveat.json' // Ensure this path is correct
+const FONT_URL = './caveat.json' // Ensure this path is correct
 const SAMPLE_RESOLUTION = 1
 const PARSE_TIME_LIMIT_MS = 12
 const SCALE = 0.04
@@ -27,6 +29,8 @@ function useCaveatFont(text, options) {
       setStrokes([])
       return
     }
+    
+    console.log('font data', fontData)
 
     let isCancelled = false
     setIsParsing(true)
@@ -38,9 +42,10 @@ function useCaveatFont(text, options) {
       let minX = Infinity
       let maxX = -Infinity
 
-      if (!glyph.paths) return { paths, minX, maxX }
+      const glyphPaths = glyph.paths || (glyph.o ? [{ d: glyph.o }] : null)
+      if (!glyphPaths) return { paths, minX, maxX }
 
-      glyph.paths.forEach(p => {
+      glyphPaths.forEach(p => {
         pathElem.setAttribute('d', p.d)
         const len = pathElem.getTotalLength()
         if (len <= 0) return
@@ -75,10 +80,9 @@ function useCaveatFont(text, options) {
         const words = paragraph.split(' ')
 
         for (const word of words) {
-          if (performance.now() - loopStartTime > PARSE_TIME_LIMIT_MS) { // what if the time limit was longer?
-            await new Promise(resolve => setTimeout(resolve, 0)) // parse, yield, repeat
-            // asynchronous: run in sequence
-            // guarantee 'generate' works for a short amount of time so the rest of the program can continue
+          console.log('Parsing word:', word);
+          if (performance.now() - loopStartTime > PARSE_TIME_LIMIT_MS) { 
+            await new Promise(resolve => setTimeout(resolve, 0)) 
             if (isCancelled) return
             loopStartTime = performance.now()
           }
@@ -87,10 +91,13 @@ function useCaveatFont(text, options) {
           let wordX = 0
 
           for (const char of word) {
-            const glyph = fontData.c[char.charCodeAt(0)] || fontData.c['63'] // which one is 63?
+            console.log('Parsing character:', char, 'char.charCodeAt(0)', char.charCodeAt(0));
+            const glyph = fontData.glyphs?.[char] || fontData.glyphs?.['?'] 
+            console.log('glyph', glyph)
             if (!glyph) continue 
 
             const { paths, minX, maxX } = parseGlyph(glyph)
+            console.log('parsed glyph paths', paths, 'minX', minX, 'maxX', maxX)
 
             if (paths.length > 0 && minX !== Infinity) {
               const shiftX = wordX - minX
@@ -106,6 +113,9 @@ function useCaveatFont(text, options) {
 
           const spaceSize = currentLineX === 0 ? 0 : options.spaceWidth * SCALE
           const fitsOnLine = options.maxWidth === Infinity || currentLineX + spaceSize + wordX <= options.maxWidth
+
+          console.log('fitsOnLine', fitsOnLine, 'currentLineX', currentLineX, 'spaceSize', spaceSize, 'wordX', wordX, 'options.maxWidth', options.maxWidth)
+          console.log('word strokes', wordStrokes)
 
           if (!fitsOnLine && currentLineX > 0) {
             lines.push({ strokes: currentLineStrokes, width: currentLineX })
@@ -127,6 +137,7 @@ function useCaveatFont(text, options) {
       }
 
       const refWidth = options.maxWidth === Infinity ? Math.max(...lines.map(l => l.width)) : options.maxWidth
+      console.log('lines', lines, 'refWidth', refWidth)
 
       const tempStrokes = [] // Vector3[][]
       const bounds = {
@@ -179,6 +190,8 @@ function useCaveatFont(text, options) {
         setIsParsing(false)
       }
     }
+
+    console.log('strokes in use font', strokes)
 
     generate()
 
@@ -267,6 +280,7 @@ function HandwrittenTextContent({
     </>
   )
 }
+
 export default function HandwrittenText({ 
   children,
   color = 'black',
@@ -291,6 +305,8 @@ export default function HandwrittenText({
     lineHeight,
     center
   })
+
+  console.log('strokes', strokes)
 
   return (
     <group {...props}>

@@ -13,7 +13,7 @@ function Experience() {
     </group>
     <Loading/>
     <Suspense>
-      <Dedication/>
+      {/* <Dedication/> */}
     </Suspense>
   </>)
 }

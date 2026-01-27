@@ -33,8 +33,7 @@ export default function Loading() {
           </mesh>
 
           <HandwrittenText
-            position-y={0.05}
-            rotation-x={MathUtils.degToRad(-90)}
+            position-y={3}
             lineWidth={0.01}
             scale={0.2}
             speed={speed}
