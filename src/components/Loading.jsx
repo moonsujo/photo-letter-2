@@ -33,13 +33,13 @@ export default function Loading() {
           </mesh>
 
           <HandwrittenText
-            position-y={3}
+            position-y={2}
             lineWidth={0.01}
             scale={0.2}
             speed={speed}
             center
           >
-            Loading
+            loading
           </HandwrittenText>
         </a.group>
       )
