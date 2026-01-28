@@ -5,7 +5,6 @@ import { safeDecode } from "../utils/safeDecode"
 import HandwrittenText from "../helpers/HandwrittenText"
 
 export function Dedication() {
-  console.log('Dedication rendered');
   const phase = useDirection(s => s.phase)
   const [showDedication, setShowDedication] = useState(false)
 
@@ -35,14 +34,14 @@ export function Dedication() {
   return (
     showDedication && (
       <HandwrittenText
-        position={[1.83, 0.02, 0]}
-        rotation-x={MathUtils.degToRad(-90)}
+        position={[0, 0, 0]}
         lineWidth={0.01}
-        scale={0.2}
+        scale={0.4}
         maxWidth={6}
         textAlign="center"
         center
-        speed={phase > 'dedication' ? 20 : 3}
+        speed={200}
+        lineHeight={20}
       >
         {dedication}
       </HandwrittenText>

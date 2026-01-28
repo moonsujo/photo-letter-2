@@ -1,9 +1,8 @@
-import { Suspense, useState } from 'react'
+import { Suspense } from 'react'
 import './Experience.css'
 import { OrbitControls, OrthographicCamera } from '@react-three/drei'
-import { Dedication } from './Dedication'
-import TestComponent from './TestComponent'
 import Loading from './Loading'
+import PhotoCard from './PhotoCard'
 
 function Experience() {
 
@@ -14,7 +13,7 @@ function Experience() {
     </group>
     <Loading/>
     <Suspense>
-      {/* <Dedication/> */}
+      <PhotoCard/>
     </Suspense>
   </>)
 }

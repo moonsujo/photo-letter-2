@@ -10,38 +10,18 @@ export default function Loading() {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if (phase === 'loading') setSpeed(20)
+      if (phase === 'loading') setSpeed(200)
     }, 1000)
 
     return () => clearTimeout(timeout)
   })
 
-  const transition = useTransition(phase, {
-    from: { positionY: 0, opacity: 0 },
-    enter: { positionY: 0, opacity: 1 },
-    leave: { positionY: -1, opacity: 0 },
-    config: config.molasses
-  })
-
-  return transition(
-    (spring, phase) =>
-      phase === 'loading' && (
-        <a.group position-y={spring.positionY}>
-          <mesh scale={[3.66, 0.08, 5.14]}>
-            <boxGeometry />
-            <a.meshStandardMaterial color="#F4D75B" transparent opacity={spring.opacity} />
-          </mesh>
-
-          <HandwrittenText
-            position-y={2}
-            lineWidth={0.01}
-            scale={0.2}
-            speed={speed}
-            center
-          >
-            loading
-          </HandwrittenText>
-        </a.group>
-      )
-  )
+  return phase === 'loading' && <HandwrittenText
+    lineWidth={0.01}
+    scale={0.2}
+    speed={speed}
+    center
+  >
+    loading
+  </HandwrittenText>
 }

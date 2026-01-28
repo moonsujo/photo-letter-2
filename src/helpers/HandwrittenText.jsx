@@ -6,7 +6,7 @@ import { Line } from '@react-three/drei'
 const FONT_URL = './satisfy.vara.json' // Ensure this path is correct
 const SAMPLE_RESOLUTION = 1
 const PARSE_TIME_LIMIT_MS = 12
-const SCALE = 0.1
+const SCALE = 0.04
 
 function useCaveatFont(text, options) {
 
@@ -43,25 +43,21 @@ function useCaveatFont(text, options) {
       let maxX = -Infinity
 
       const glyphPaths = glyph.paths || (glyph.o ? [{ d: glyph.o }] : null)
-      console.log('glyph to parse', glyph, 'glyphPaths', glyphPaths)
       if (!glyphPaths) return { paths, minX, maxX }
 
       glyphPaths.forEach(p => {
         pathElem.setAttribute('d', p.d)
         const len = pathElem.getTotalLength()
         if (len <= 0) return
-        console.log('parsing path', p.d, 'length', len)
 
         const points = [] // Vector3
         const sampleCount = Math.ceil(len / SAMPLE_RESOLUTION) + 1
 
         for (let i = 0; i <= sampleCount; i++) {
           const pt = pathElem.getPointAtLength((i / sampleCount) * len)
-          console.log('sampled point', i, 'of', sampleCount, pt)
           const x = ((p.mx || 0) + pt.x) * SCALE
           const y = -((p.dy || 0) + pt.y) * SCALE
           points.push(new Vector3(x, y, 0))
-          console.log('scaled point', x, y)
 
           if (x < minX) minX = x
           if (x > maxX) maxX = x
@@ -95,9 +91,7 @@ function useCaveatFont(text, options) {
           let wordX = 0
 
           for (const char of word) {
-            console.log('Parsing character:', char, 'char.charCodeAt(0)', char.charCodeAt(0));
             const glyph = fontData.c[char.charCodeAt(0)] || fontData.c['63']
-            console.log('glyph', glyph)
             if (!glyph) continue 
 
             const { paths, minX, maxX } = parseGlyph(glyph)
@@ -289,7 +283,7 @@ export default function HandwrittenText({
   children,
   color = 'black',
   lineWidth = 1,
-  speed = 0.01,
+  speed = 0.1,
   letterSpacing = 0,
   spaceWidth = 10,
   maxWidth = Infinity,
@@ -300,7 +294,6 @@ export default function HandwrittenText({
   onResolve,
   ...props
 }) {
-  console.log('HandwrittenText rendered with children:', children);
   const { strokes } = useCaveatFont(children, {
     letterSpacing,
     spaceWidth,

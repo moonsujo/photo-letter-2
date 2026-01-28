@@ -51,3 +51,18 @@ i was hooked by the handwriting feature. i didn't think about how it was going t
 
 learning
 three.js journey certificate
+
+handwriting
+trick was to download the font from the vara repository. https://github.com/akzhy/Vara/blob/v2.0.0/fonts/Satisfy/SatisfySL.json
+the font wasn't showing in 'Sources' because it was public. it wasn't the one that was shown. I grabbed the original and changed the name.
+
+fonts
+the ones i found online and converted (even the one included in dammafra's app) had two lines: the outlines - the inner and outer lines.
+Vara has a procedure to produce a single-line font by tracing.
+
+handwrite 'to you'
+float 'next' button
+pop open a polaroid film
+
+float a video puzzle
+can it be done in three.js?
