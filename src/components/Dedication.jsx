@@ -12,7 +12,7 @@ export function Dedication() {
     () =>
       decodeURIComponent(
         safeDecode(location.search.substring(1), {
-          dedication: import.meta.env.VITE_DEDICATION || 'To you',
+          dedication: import.meta.env.VITE_DEDICATION || 'To Emo',
         }).dedication,
       ),
     [],

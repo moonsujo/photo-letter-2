@@ -43,7 +43,7 @@ export default function UI() {
                         style={spring}
                         onClick={() => setPhase('opening')}
                     >
-                        Unfold
+                        Open
                     </Button>
                 )
         )}

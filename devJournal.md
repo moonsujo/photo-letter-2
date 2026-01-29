@@ -75,3 +75,10 @@ photo (video) appears in a puzzle
 
 float a video puzzle
 can it be done in three.js?
+
+draw heart shaped balloons
+float across the screen
+add confetti effect
+it reveals a polaroid
+it writes, 'remember that time...'
+video puzzle fades in
