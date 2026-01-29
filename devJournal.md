@@ -64,5 +64,14 @@ handwrite 'to you'
 float 'next' button
 pop open a polaroid film
 
+animation
+envelope opens
+polaroid photo comes out
+2. polaroid camera appears
+take photo
+photo slides out
+"remember that time..."
+photo (video) appears in a puzzle
+
 float a video puzzle
 can it be done in three.js?

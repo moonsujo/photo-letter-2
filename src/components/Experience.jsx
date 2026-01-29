@@ -3,6 +3,7 @@ import './Experience.css'
 import { OrbitControls, OrthographicCamera } from '@react-three/drei'
 import Loading from './Loading'
 import PhotoCard from './PhotoCard'
+import UI from '../ui/UI'
 
 function Experience() {
 

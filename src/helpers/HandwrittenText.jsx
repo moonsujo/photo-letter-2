@@ -10,7 +10,6 @@ const SCALE = 0.04
 
 function useCaveatFont(text, options) {
 
-  console.log('use CaveatFont called with text:', text);
   const [fontData, setFontData] = useState(null)
   const [strokes, setStrokes] = useState([])
   const [isParsing, setIsParsing] = useState(false)
@@ -29,8 +28,6 @@ function useCaveatFont(text, options) {
       setStrokes([])
       return
     }
-    
-    console.log('font data', fontData)
 
     let isCancelled = false
     setIsParsing(true)
@@ -80,7 +77,6 @@ function useCaveatFont(text, options) {
         const words = paragraph.split(' ')
 
         for (const word of words) {
-          console.log('Parsing word:', word);
           if (performance.now() - loopStartTime > PARSE_TIME_LIMIT_MS) { 
             await new Promise(resolve => setTimeout(resolve, 0)) 
             if (isCancelled) return
@@ -95,7 +91,6 @@ function useCaveatFont(text, options) {
             if (!glyph) continue 
 
             const { paths, minX, maxX } = parseGlyph(glyph)
-            console.log('parsed glyph paths', paths, 'minX', minX, 'maxX', maxX)
 
             if (paths.length > 0 && minX !== Infinity) {
               const shiftX = wordX - minX
@@ -111,9 +106,6 @@ function useCaveatFont(text, options) {
 
           const spaceSize = currentLineX === 0 ? 0 : options.spaceWidth * SCALE
           const fitsOnLine = options.maxWidth === Infinity || currentLineX + spaceSize + wordX <= options.maxWidth
-
-          console.log('fitsOnLine', fitsOnLine, 'currentLineX', currentLineX, 'spaceSize', spaceSize, 'wordX', wordX, 'options.maxWidth', options.maxWidth)
-          console.log('word strokes', wordStrokes)
 
           if (!fitsOnLine && currentLineX > 0) {
             lines.push({ strokes: currentLineStrokes, width: currentLineX })
@@ -135,7 +127,6 @@ function useCaveatFont(text, options) {
       }
 
       const refWidth = options.maxWidth === Infinity ? Math.max(...lines.map(l => l.width)) : options.maxWidth
-      console.log('lines', lines, 'refWidth', refWidth)
 
       const tempStrokes = [] // Vector3[][]
       const bounds = {
@@ -188,8 +179,6 @@ function useCaveatFont(text, options) {
         setIsParsing(false)
       }
     }
-
-    console.log('strokes in use font', strokes)
 
     generate()
 
@@ -302,8 +291,6 @@ export default function HandwrittenText({
     lineHeight,
     center
   })
-
-  console.log('strokes', strokes)
 
   return (
     <group {...props}>

@@ -1,0 +1,16 @@
+@import 'tailwindcss';
+/* generates class styles at run time */
+
+/* the rest */
+/* link font by @theme. value is linked to the font-family value in @font-face.
+    this is Tailwind CSS v4 procedure. */
+@theme {
+    --font-satisfy: "Satisfy";
+}
+
+@font-face {
+    font-family: "Satisfy";
+    src: url("/fonts/satisfy.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+}
