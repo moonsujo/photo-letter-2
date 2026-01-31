@@ -9,6 +9,7 @@ export default function UI() {
 
     const phase = useDirection(s => s.phase)
     const setPhase = useDirection(s => s.setPhase)
+    const setOpen = useDirection(s => s.setOpen)
 
     // open state
     // edit mode state
@@ -26,7 +27,6 @@ export default function UI() {
         delay: phase === 'dedication' ? 1000 : 0
     })
 
-    console.log('UI') 
     return <div
         className="fixed left-0 w-full pointer-events-none font-satisfy"
         style={{
@@ -41,7 +41,7 @@ export default function UI() {
                         // control style via classes
                         className="absolute! bottom-4 left-1/2 -translate-x-1/2 text-2xl w-26"
                         style={spring}
-                        onClick={() => setPhase('opening')}
+                        onClick={() => { setPhase('opening'); setOpen(true); }}
                     >
                         Open
                     </Button>

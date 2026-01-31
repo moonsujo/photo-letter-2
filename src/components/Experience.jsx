@@ -10,7 +10,7 @@ function Experience() {
   return (<>
     <group name='setup'>
       <OrthographicCamera lookAt={[0,0,0]} position={[0,0,5]}/>
-      <OrbitControls makeDefault enableZoom={false} maxPolarAngle={Math.PI / 2} minPolarAngle={Math.PI / 2}/>
+      <OrbitControls makeDefault/>
     </group>
     <Loading/>
     <Suspense>

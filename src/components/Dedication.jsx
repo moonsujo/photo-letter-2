@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react"
-import { MathUtils } from "three"
 import { useDirection } from "../stores/useDirection"
 import { safeDecode } from "../utils/safeDecode"
 import HandwrittenText from "../helpers/HandwrittenText"

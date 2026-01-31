@@ -82,3 +82,5 @@ add confetti effect
 it reveals a polaroid
 it writes, 'remember that time...'
 video puzzle fades in
+
+include music
