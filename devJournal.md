@@ -84,3 +84,15 @@ it writes, 'remember that time...'
 video puzzle fades in
 
 include music
+
+shoe dog
+future, product, "own thing", "own business", "own idea"
+do it while i'm young
+stay in a business that's related, practicing my skills
+websites, C++
+will other people use it? what if someone wrote it for me?
+
+2/3/2026
+designed the envelope in blender
+https://www.youtube.com/watch?v=1gbVsZIE8kM&t=50s
+add handwritten text on it. rotate the envelope and run the animation. the polaroid is revealed. 
