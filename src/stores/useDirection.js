@@ -4,6 +4,6 @@ export const useDirection = create(set => ({
   phase: 'loading',
   setPhase: phase => set(() => ({ phase })),
 
-  open: false,
+  open: undefined,
   setOpen: open => set(() => ({ open }))
 }))

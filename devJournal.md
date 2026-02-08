@@ -96,3 +96,11 @@ will other people use it? what if someone wrote it for me?
 designed the envelope in blender
 https://www.youtube.com/watch?v=1gbVsZIE8kM&t=50s
 add handwritten text on it. rotate the envelope and run the animation. the polaroid is revealed. 
+
+2/7/26
+open animation complete.
+wish the envelope had creases to make it look more real.
+able to open and close with the button.
+add balloons that spell 'Happy birthday!'
+they should pop out on open. 
+pop confetti.
