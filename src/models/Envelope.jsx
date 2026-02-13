@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
-import { LoopOnce } from 'three'
+import { LoopOnce, DoubleSide } from 'three'
 
 export function Envelope(props) {
   const group = useRef()
@@ -46,7 +46,7 @@ export function Envelope(props) {
           geometry={nodes.Plane.geometry}
           scale={[1.234, 1, 1]}
         >
-          <meshStandardMaterial color={envelopeColor}/>
+          <meshStandardMaterial color={envelopeColor} side={DoubleSide}/>
         </mesh>
         <group name="Empty001" rotation={[3, -Math.PI / 2, 0]}>
           <mesh
@@ -57,7 +57,7 @@ export function Envelope(props) {
             rotation={[1.571, 1.436, -1.571]}
             scale={[1.234, 1, 1]}
           >
-            <meshStandardMaterial color={envelopeColor} />
+            <meshStandardMaterial color={envelopeColor} side={DoubleSide}/>
           </mesh>
         </group>
       </group>

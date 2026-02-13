@@ -11,7 +11,8 @@ function Experience() {
     <group name='setup'>
       <OrthographicCamera lookAt={[0,0,0]} position={[0,0,5]}/>
       <OrbitControls makeDefault/>
-      <ambientLight intensity={2}/>
+      {/* <ambientLight intensity={2}/> */}
+      <directionalLight position={[0, 10, 5]} intensity={1.5} />
     </group>
     <Loading/>
     <Suspense>

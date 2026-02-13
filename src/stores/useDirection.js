@@ -5,5 +5,8 @@ export const useDirection = create(set => ({
   setPhase: phase => set(() => ({ phase })),
 
   open: undefined,
-  setOpen: open => set(() => ({ open }))
+  setOpen: open => set(() => ({ open })),
+
+  reveal: false,
+  setReveal: reveal => set(() => ({ reveal })),
 }))
