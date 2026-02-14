@@ -1,8 +1,9 @@
-import { useEffect, useCallback, useRef, useState } from "react";
+import { useEffect, useCallback, useRef, useState, forwardRef } from "react";
 import { useDirection } from "../stores/useDirection";
 import { Dedication } from "./Dedication";
 import { useGLTF, useAnimations, shaderMaterial } from '@react-three/drei'
 import { LoopOnce, DoubleSide } from 'three'
+import HandwrittenText from '../helpers/HandwrittenText'
 
 import { useSpring, animated } from "@react-spring/three";
 import { extend } from '@react-three/fiber'
@@ -35,13 +36,16 @@ const GlisteningMaterial = shaderMaterial(
   `
 )
 
+// enables writing <glisteningMaterial /> in JSX, 
+// and the shader is compiled in the GPU's driver and runs on the card.
 extend({ GlisteningMaterial })
 
-function Polaroid() {
+const Polaroid = forwardRef(({ startWriting, ...props }, ref) => {
     const playEffect = useDirection(s => s.reveal)
     const materialRef = useRef()
   
     useEffect(() => {
+        console.log('playEffect changed:', playEffect)
       if (playEffect && materialRef.current) {
            gsap.fromTo(materialRef.current.uniforms.uShine, 
             { value: -0.5 },
@@ -56,29 +60,43 @@ function Polaroid() {
     }, [playEffect])
   
     return (
-      <group>
+      <group ref={ref} {...props}>
          {/* Frame */}
          <mesh>
            <planeGeometry args={[1, 1.2]} />
-           <meshStandardMaterial color="#f8f8f8" />
+           <meshStandardMaterial color="#f8f8f8" side={DoubleSide} />
          </mesh>
          {/* Picture */}
-         <mesh position={[0, 0.1, 0.001]}>
+         <mesh position={[0, 0.1, 0.0001]}>
            <planeGeometry args={[0.8, 0.8]} />
-           <glisteningMaterial ref={materialRef} uColor="#2c2c2c" /> 
+           <glisteningMaterial ref={materialRef} uColor="#2c2c2c" side={DoubleSide} /> 
          </mesh>
+         {/* Text */} 
+         <group position={[0, -0.4, 0.1]}>
+            {startWriting && (
+                <HandwrittenText 
+                 lineHeight={1.5}
+                 textAlign="center" 
+                 center
+                >
+                    HAPPY BIRTHDAY!
+                </HandwrittenText>
+            )}
+         </group>
       </group>
     )
-}
+})
 
 export default function PhotoCard() {
     const setPhase = useDirection(s => s.setPhase)
     const openTrigger = useDirection(s => s.open)
     const setReveal = useDirection(s => s.setReveal)
+    const [writeText, setWriteText] = useState(false)
 
     // envelope prep
     const { nodes, animations } = useGLTF('/models/envelope.glb')
     const envelopeGroup = useRef()
+    const polaroidRef = useRef()
     const { actions, names } = useAnimations(animations, envelopeGroup)
 
     const [springs, api] = useSpring(() => ({
@@ -89,18 +107,6 @@ export default function PhotoCard() {
     // polaroid picture scene
     const open = useCallback(() => {
         console.log('card opened')
-        // send balloons up
-        // turn envelope around
-        // api.start(
-        //     {
-        //         from: {
-        //             rotation: [0, 0, 0],
-        //         },
-        //         to: {
-        //             rotation: [Math.PI, 0, 0],
-        //         },
-        //     }
-        // )
         api.start({
             from: {
                 rotation: [Math.PI/2, 0, Math.PI],
@@ -124,14 +130,60 @@ export default function PhotoCard() {
                     action.play()
                 }
             });
-            setTimeout(() => setReveal(true), 500)
+            // polaroid animation:
+            // pop it out of envelope - upward, forward, downward arc with gsap
+            if (polaroidRef.current) {
+                const tl = gsap.timeline({
+                    delay: 0.5,
+                    onComplete: () => {
+                        setWriteText(true)
+                        // glisten polaroid later
+                        setTimeout(() => setReveal(true), 2000)
+                    }
+                })
+
+                tl.to(polaroidRef.current.position, {
+                    y: 1.8,
+                    z: 0.5,
+                    duration: 0.8,
+                    ease: "power2.out"
+                })
+                .to(polaroidRef.current.position, {
+                    y: 0,
+                    z: 2.5,
+                    duration: 1.0,
+                    ease: "power2.inOut"
+                })
+                .to(polaroidRef.current.rotation, {
+                    z: (Math.random() - 0.5) * 0.2,
+                    duration: 1.8,
+                    ease: "power1.inOut"
+                }, "<")
+            }
         }, 1000)
         // reveal polaroid
-    }, [api])
+    }, [api, names, actions, setReveal])
 
     const close = useCallback(() => {
         console.log('card closed')
         setReveal(false)
+        setWriteText(false)
+        
+        // Reset polaroid position
+        if (polaroidRef.current) {
+            gsap.to(polaroidRef.current.position, {
+                y: 0.0001, // original y (relative to parent space it was 0 or epsilon)
+                z: 1,      // original z
+                duration: 0.5
+            })
+            // Reset rotation
+            gsap.to(polaroidRef.current.rotation, {
+                x: -Math.PI/2,
+                y: 0,
+                z: 0,
+                duration: 0.5
+            })
+        }
         
         names.forEach((name) => {
             const action = actions[name];
@@ -147,7 +199,7 @@ export default function PhotoCard() {
             }
         });
 
-    }, [api])
+    }, [api, names, actions, setReveal])
 
     useEffect(() => {
         setPhase('dedication')
@@ -194,7 +246,12 @@ export default function PhotoCard() {
                     </group>
                     {/* position and rotation */}
                     {/* text, glisten */}
-                    <Polaroid />
+                    <Polaroid 
+                        ref={polaroidRef}
+                        startWriting={writeText}
+                        position={[0, 0.0001, 1]} 
+                        rotation={[-Math.PI/2, 0, 0]}
+                    />
                 </group>
             </animated.group>
         </>
