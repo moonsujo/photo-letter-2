@@ -9,4 +9,7 @@ export const useDirection = create(set => ({
 
   reveal: false,
   setReveal: reveal => set(() => ({ reveal })),
+
+  writeFrontText: false,
+  setWriteFrontText: writeFrontText => set(() => ({ writeFrontText })),
 }))

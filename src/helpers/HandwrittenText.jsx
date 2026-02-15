@@ -293,7 +293,7 @@ export default function HandwrittenText({
   })
 
   return (
-    <group {...props}>
+    <group {...props} >
       <HandwrittenTextContent
         key={strokes.length}
         strokes={strokes}

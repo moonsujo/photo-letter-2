@@ -40,9 +40,10 @@ const GlisteningMaterial = shaderMaterial(
 // and the shader is compiled in the GPU's driver and runs on the card.
 extend({ GlisteningMaterial })
 
-const Polaroid = forwardRef(({ startWriting, ...props }, ref) => {
+const Polaroid = forwardRef((props, ref) => {
     const playEffect = useDirection(s => s.reveal)
     const materialRef = useRef()
+    const writeFrontText = useDirection(s => s.writeFrontText)
   
     useEffect(() => {
         console.log('playEffect changed:', playEffect)
@@ -60,26 +61,32 @@ const Polaroid = forwardRef(({ startWriting, ...props }, ref) => {
     }, [playEffect])
   
     return (
-      <group ref={ref} {...props}>
+      <group ref={ref} {...props} >
          {/* Frame */}
-         <mesh>
+         <mesh >
            <planeGeometry args={[1, 1.2]} />
            <meshStandardMaterial color="#f8f8f8" side={DoubleSide} />
          </mesh>
          {/* Picture */}
-         <mesh position={[0, 0.1, 0.0001]}>
-           <planeGeometry args={[0.8, 0.8]} />
-           <glisteningMaterial ref={materialRef} uColor="#2c2c2c" side={DoubleSide} /> 
+         <mesh position={[0, -0.1, -0.0001]}>
+           <planeGeometry args={[0.9, 0.9]} />
+           <glisteningMaterial ref={materialRef} uColor="#2c2c2c" side={DoubleSide}/> 
          </mesh>
          {/* Text */} 
-         <group position={[0, -0.4, 0.1]}>
-            {startWriting && (
+         <group position={[0, -0.4, 0.1]} rotation={[-Math.PI, 0, 0]}>
+            {writeFrontText && (
                 <HandwrittenText 
-                 lineHeight={1.5}
-                 textAlign="center" 
-                 center
+                    position={[0, -0.3, 0.21]}
+                    lineWidth={0.005}
+                    scale={0.15}
+                    maxWidth={5}
+                    textAlign="center"
+                    center
+                    speed={200}
+                    lineHeight={25}
+                    color='white'
                 >
-                    HAPPY BIRTHDAY!
+                    {`Happy Birthday!\nI made a puzzle for you`}
                 </HandwrittenText>
             )}
          </group>
@@ -91,7 +98,9 @@ export default function PhotoCard() {
     const setPhase = useDirection(s => s.setPhase)
     const openTrigger = useDirection(s => s.open)
     const setReveal = useDirection(s => s.setReveal)
-    const [writeText, setWriteText] = useState(false)
+    const setWriteFrontText = useDirection(s => s.setWriteFrontText)
+
+    console.log('photo card rendered')
 
     // envelope prep
     const { nodes, animations } = useGLTF('/models/envelope.glb')
@@ -117,6 +126,8 @@ export default function PhotoCard() {
             reset: false,
             loop: false
         })
+
+        console.log('animation started')
         // open it
         setTimeout(() => {
             names.forEach((name) => {
@@ -134,31 +145,31 @@ export default function PhotoCard() {
             // pop it out of envelope - upward, forward, downward arc with gsap
             if (polaroidRef.current) {
                 const tl = gsap.timeline({
-                    delay: 0.5,
+                    delay: 1,
                     onComplete: () => {
-                        setWriteText(true)
                         // glisten polaroid later
-                        setTimeout(() => setReveal(true), 2000)
+                        setTimeout(() => {
+                            setReveal(true)
+                        }, 200)
+                        setTimeout(() => {
+                            setWriteFrontText(true)
+                        }, 2000)
                     }
                 })
 
+                // -z is up
                 tl.to(polaroidRef.current.position, {
-                    y: 1.8,
-                    z: 0.5,
-                    duration: 0.8,
+                    y: 0,
+                    z: -1,
+                    duration: 0.5,
                     ease: "power2.out"
                 })
                 .to(polaroidRef.current.position, {
-                    y: 0,
-                    z: 2.5,
-                    duration: 1.0,
+                    y: 3,
+                    z: 1,
+                    duration: 0.5,
                     ease: "power2.inOut"
                 })
-                .to(polaroidRef.current.rotation, {
-                    z: (Math.random() - 0.5) * 0.2,
-                    duration: 1.8,
-                    ease: "power1.inOut"
-                }, "<")
             }
         }, 1000)
         // reveal polaroid
@@ -209,13 +220,13 @@ export default function PhotoCard() {
         // if open state, call open function
         // else, call close function
         if (openTrigger) open()
+        console.log('open trigger changed:', openTrigger, 'current open function:', open)
         // else close()
     }, [openTrigger, open])
 
     const envelopeColor = '#ccff00'
     return (
         <>
-            
             <animated.group rotation={springs.rotation} position={[0, 1, -0.1]}>
                 <group position={[0, -0.01, 1]} rotation={[-Math.PI/2, Math.PI, 0]}>
                    <Dedication/>
@@ -223,34 +234,33 @@ export default function PhotoCard() {
                 <group ref={envelopeGroup} dispose={null}>
                     <group name="Scene">
                         <mesh
-                        name="Plane"
-                        castShadow
-                        receiveShadow
-                        geometry={nodes.Plane.geometry}
-                        scale={[1.234, 1, 1]}
-                        >
-                        <meshStandardMaterial color={envelopeColor} side={DoubleSide}/>
-                        </mesh>
-                        <group name="Empty001" rotation={[3, -Math.PI / 2, 0]}>
-                        <mesh
-                            name="Plane001"
+                            name="Plane"
                             castShadow
                             receiveShadow
-                            geometry={nodes.Plane001.geometry}
-                            rotation={[1.571, 1.436, -1.571]}
+                            geometry={nodes.Plane.geometry}
                             scale={[1.234, 1, 1]}
                         >
                             <meshStandardMaterial color={envelopeColor} side={DoubleSide}/>
                         </mesh>
+                        <group name="Empty001" rotation={[3, -Math.PI / 2, 0]}>
+                            <mesh
+                                name="Plane001"
+                                castShadow
+                                receiveShadow
+                                geometry={nodes.Plane001.geometry}
+                                rotation={[1.571, 1.436, -1.571]}
+                                scale={[1.234, 1, 1]}
+                            >
+                                <meshStandardMaterial color={envelopeColor} side={DoubleSide}/>
+                            </mesh>
                         </group>
                     </group>
                     {/* position and rotation */}
                     {/* text, glisten */}
                     <Polaroid 
                         ref={polaroidRef}
-                        startWriting={writeText}
                         position={[0, 0.0001, 1]} 
-                        rotation={[-Math.PI/2, 0, 0]}
+                        rotation={[Math.PI/2, 0, 0]}
                     />
                 </group>
             </animated.group>
