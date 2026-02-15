@@ -109,3 +109,7 @@ pop confetti.
 came back after a few days. it was fun dragging the camera around the envelope with orbit controls.
 relying on the agent to write the useSpring api to flip the envelope.
 if I have to write the filename with an extension, or code syntax, i should write it in the script.
+
+2/15/26
+i'm writing a state specific to each component.
+instead, i can write a ref to each component, and move it using gsap's timeline.

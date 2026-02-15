@@ -146,15 +146,6 @@ export default function PhotoCard() {
             if (polaroidRef.current) {
                 const tl = gsap.timeline({
                     delay: 1,
-                    onComplete: () => {
-                        // glisten polaroid later
-                        setTimeout(() => {
-                            setReveal(true)
-                        }, 200)
-                        setTimeout(() => {
-                            setWriteFrontText(true)
-                        }, 2000)
-                    }
                 })
 
                 // -z is up
@@ -164,21 +155,39 @@ export default function PhotoCard() {
                     duration: 0.5,
                     ease: "power2.out"
                 })
-                .to(polaroidRef.current.position, {
+                tl.to(polaroidRef.current.position, {
                     y: 3,
                     z: 1,
                     duration: 0.5,
-                    ease: "power2.inOut"
+                    ease: "power2.inOut",
+                    onComplete: () => {
+                        setTimeout(() => {
+                            setWriteFrontText(true)
+                        }, 700)
+                        setTimeout(() => {
+                            setReveal(true)
+                        }, 10700)
+                    }
                 })
+
+                // glisten
+                // swipe the text, and reveal puzzle
+                
+                // .to(polaroidRef.current.rotation, {
+                //     y: Math.PI,
+                //     duration: 0.5,
+                //     delay: 10,
+                //     ease: "power2.in",
+                // })
             }
         }, 1000)
         // reveal polaroid
-    }, [api, names, actions, setReveal])
+    }, [api, names, actions, setReveal, setWriteFrontText])
 
     const close = useCallback(() => {
         console.log('card closed')
         setReveal(false)
-        setWriteText(false)
+        setWriteFrontText(false)
         
         // Reset polaroid position
         if (polaroidRef.current) {
